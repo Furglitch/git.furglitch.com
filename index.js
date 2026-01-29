@@ -1,4 +1,5 @@
 const GITHUB_HOST = 'github.com'
+const CUSTOM_URL = 'git.furglitch.com'
 const USERNAME = 'Furglitch'
 const USER_PATH = `/${USERNAME}`
 const CSS_URL = 'https://raw.githubusercontent.com/Furglitch/git.furglitch.com/main/assets/css/catppuccin.css'
@@ -35,12 +36,10 @@ async function handleRequest(request) {
         return response
     }
 
-    let body = await response.text()
-
-    // HTML Rewrites
-    body = body.replace(/https?:\/\/github\.com\/Furglitch/gi, 'https://git.furglitch.com')
-    body = body.replace(/(['"])\/Furglitch\?/g, '$1/?')
-    body = body.replace(/(['"])\/Furglitch\/?(['"])/g, '$1/$2')
+    let body = await response.text() // Swap github links to custom domain
+    body = body.replace(new RegExp(`https?:\/\/${GITHUB_HOST}\/${USERNAME}`, 'gi'), `https://${CUSTOM_URL}`)
+    body = body.replace(new RegExp(`(['"])\/${USERNAME}\\?`, 'g'), '$1/?')
+    body = body.replace(new RegExp(`(['"])\/${USERNAME}\/?(['"])`, 'g'), '$1/$2')
 
     // Fetch and inject CSS
     const cssResponse = await fetch(CSS_URL)

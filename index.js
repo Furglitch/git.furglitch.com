@@ -27,7 +27,7 @@ async function handleRequest(request) {
 
     if (response.status === 404) {
         const targetPath = url.pathname + url.search
-        const githubLoginUrl = `https://github.com${targetPath}`
+        const originUrl = `https://github.com${targetPath}`
         const messagePage = `
 <!DOCTYPE html>
 <html>
@@ -45,16 +45,16 @@ async function handleRequest(request) {
         a:hover { color: #cba6f7; }
         .emoji { font-size: 2em; margin-bottom: 20px; }
     </style>
-    <meta http-equiv="refresh" content="3; url=${githubUrl}">
+    <meta http-equiv="refresh" content="3; url=${originUrl}">
 </head>
 <body>
     <div class="emoji">🔐</div>
     <h1>Redirecting to GitHub...</h1>
     <p>You're being redirected to <strong>github.com</strong> to log in or access content.<br>
     <small>This proxy hasn't figured out full GitHub login persistence yet! 😅</small></p>
-    <p><a href="${githubUrl}">Click here if not redirected (3s)</a></p>
+    <p><a href="${originUrl}">Click here if not redirected (3s)</a></p>
     <script>
-        setTimeout(() => window.location.href = '${githubUrl}', 3000)
+        setTimeout(() => window.location.href = '${originUrl}', 3000)
     </script>
 </body>
 </html>`.trim()

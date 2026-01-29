@@ -28,7 +28,39 @@ async function handleRequest(request) {
     if (response.status === 404) {
         const targetPath = url.pathname + url.search
         const githubLoginUrl = `https://github.com${targetPath}`
-        return Response.redirect(githubLoginUrl, 302)
+        const messagePage = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting to GitHub...</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 500px; margin: 100px auto; padding: 40px; 
+            text-align: center; background: #1e1e2e; color: #cdd6f4;
+            border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        a { color: #89b4fa; text-decoration: none; font-weight: 600; }
+        a:hover { color: #cba6f7; }
+        .emoji { font-size: 2em; margin-bottom: 20px; }
+    </style>
+    <meta http-equiv="refresh" content="3; url=${githubUrl}">
+</head>
+<body>
+    <div class="emoji">🔐</div>
+    <h1>Redirecting to GitHub...</h1>
+    <p>You're being redirected to <strong>github.com</strong> to log in or access content.<br>
+    <small>This proxy hasn't figured out full GitHub login persistence yet! 😅</small></p>
+    <p><a href="${githubUrl}">Click here if not redirected (3s)</a></p>
+    <script>
+        setTimeout(() => window.location.href = '${githubUrl}', 3000)
+    </script>
+</body>
+</html>`.trim()
+        return new Response(messagePage, {
+        headers: { 'content-type': 'text/html;charset=UTF-8' }
+    , status: 302 })
     }
 
     const contentType = response.headers.get('content-type') || ''

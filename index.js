@@ -24,6 +24,12 @@ async function handleRequest(request) {
         body: request.body
     })
 
+    if (response.status === 404) {
+        const targetPath = url.pathname + url.search
+        const githubLoginUrl = `https://github.com${targetPath}`
+        return Response.redirect(githubLoginUrl, 302)
+    }
+
     const contentType = response.headers.get('content-type') || ''
     if (!contentType.includes('text/html')) {
         return response
